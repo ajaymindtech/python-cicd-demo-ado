@@ -12,3 +12,6 @@ git config --global user.email "githubuseremail"
 password is takeb PAT(personal access token)
 
 git config --list
+
+git push -u origin master
+git push --set-upstream origin master
