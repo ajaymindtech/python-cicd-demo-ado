@@ -1,0 +1,14 @@
+echo "# python-cicd-demo-ado" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M master
+git remote add origin https://github.com/ajaymindtech/python-cicd-demo-ado.git
+git push -u origin master
+
+git config --global user.name "githubusername"
+git config --global user.email "githubuseremail"
+
+password is takeb PAT(personal access token)
+
+git config --list
