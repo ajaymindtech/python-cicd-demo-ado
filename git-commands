@@ -15,3 +15,5 @@ git config --list
 
 git push -u origin master
 git push --set-upstream origin master
+
+docker cred ajaymulitcloud2023 ajay11
