@@ -27,13 +27,19 @@ steps:
 - task: UsePythonVersion@0
   displayName: 'Use Python 3.x'
 
+  # Debugging step to list files and directories in the repo
+- bash: |
+    echo "Listing the contents of the repository:"
+    ls -lah
+  displayName: 'List repository contents'
+
 - bash: |
    pip install pytest 
    pip install pytest-cov 
    pip install pytest-xdist 
    pip install pytest-bdd 
   displayName: 'Install a bunch of pip packages.'
-  
+
 - bash: 'pytest --junitxml=$(Build.StagingDirectory)/010.xml' 
   workingDirectory: '010_CrackingCodeBasic'
   displayName: 'Run test 010'
