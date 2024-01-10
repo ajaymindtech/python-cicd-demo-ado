@@ -1,0 +1,24 @@
+helm install elasticsearch elastic/elasticsearch
+NAME: elasticsearch
+LAST DEPLOYED: Tue Jan  9 16:11:42 2024
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+NOTES:
+1. Watch all cluster members come up.
+  $ kubectl get pods --namespace=default -l app=elasticsearch-master -w
+2. Retrieve elastic user's password.
+  $ kubectl get secrets --namespace=default elasticsearch-master-credentials -ojsonpath='{.data.password}' | base64 -d
+3. Test cluster health using Helm test.
+  $ helm --namespace=default test elasticsearch
+
+helm install metricbeat elastic/metricbeat
+NAME: metricbeat
+LAST DEPLOYED: Tue Jan  9 16:15:32 2024
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+1. Watch all containers come up.
+  $ kubectl get pods --namespace=default -l app=metricbeat-metricbeat -w

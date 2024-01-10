@@ -1,0 +1,19 @@
+metricbeat.autodiscover:
+  providers:
+    - type: kubernetes
+      node: ${NODE_NAME}
+      hints.enabled: true
+      templates:
+        - config:
+            - module: kubernetes
+              metricsets:
+                - container
+                - node
+                - pod
+                - system
+                - volume
+              period: 10s
+              host: "${NODE_NAME}"
+              hosts: ["${NODE_NAME}:10255"]
+output.elasticsearch:
+  hosts: ['${ELASTICSEARCH_HOSTS:elasticsearch-master:9200}']

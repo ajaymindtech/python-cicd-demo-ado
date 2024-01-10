@@ -1,0 +1,107 @@
+
+### Monitoring a Kubernetes Cluster with Metricbeat
+
+#### 1. Install Elasticsearch and Kibana using Helm
+
+First, add the Elastic Helm chart repository and install Elasticsearch and Kibana:
+
+```bash
+helm repo add elastic https://helm.elastic.co
+helm install elasticsearch elastic/elasticsearch
+helm install kibana elastic/kibana
+```
+
+#### 2. Install Metricbeat
+
+Metricbeat will be used to collect metrics from the Kubernetes cluster:
+
+```bash
+helm install metricbeat elastic/metricbeat
+```
+
+#### 3. Configure Metricbeat
+
+Create a `metricbeat-kubernetes.yaml` file with the following configuration to enable Kubernetes module:
+
+```yaml
+metricbeat.autodiscover:
+  providers:
+    - type: kubernetes
+      node: ${NODE_NAME}
+      hints.enabled: true
+      templates:
+        - config:
+            - module: kubernetes
+              metricsets:
+                - container
+                - node
+                - pod
+                - system
+                - volume
+              period: 10s
+              host: "${NODE_NAME}"
+              hosts: ["${NODE_NAME}:10255"]
+output.elasticsearch:
+  hosts: ['${ELASTICSEARCH_HOSTS:elasticsearch-master:9200}']
+```
+
+Apply the configuration:
+
+```bash
+kubectl create configmap metricbeat-config --from-file=metricbeat-kubernetes.yaml -n kube-system
+```
+
+Restart Metricbeat to apply the new configuration:
+
+```bash
+kubectl rollout restart daemonset/metricbeat -n kube-system
+```
+
+#### 4. Access Kibana
+
+Port-forward to access Kibana locally:
+
+```bash
+kubectl port-forward deployment/kibana 5601
+```
+
+Now, access Kibana at `http://localhost:5601`.
+
+#### 5. Setup Kubernetes Dashboards in Kibana
+
+In Kibana, use the Dashboard feature to create or import dashboards for Kubernetes monitoring.
+
+### Monitoring a MySQL Database with Metricbeat
+
+#### 1. Install Metricbeat on a Machine with Access to MySQL
+
+This could be within the Kubernetes cluster or an external machine.
+
+#### 2. Configure Metricbeat
+
+Edit the `metricbeat.yml` file to enable the MySQL module. Here’s a sample configuration:
+
+```yaml
+metricbeat.modules:
+- module: mysql
+  metricsets:
+    - status
+  period: 10s
+  hosts: ["tcp(localhost:3306)"]
+  username: root
+  password: your_password
+
+output.elasticsearch:
+  hosts: ["<elasticsearch-host>:9200"]
+```
+
+Replace `<elasticsearch-host>` with your Elasticsearch service address.
+
+#### 3. Start Metricbeat
+
+Start Metricbeat to begin collecting metrics from MySQL and sending them to Elasticsearch.
+
+#### 4. Access Kibana
+
+Access Kibana as previously described and create dashboards for monitoring MySQL.
+https://artifacthub.io/packages/helm/elastic/kibana
