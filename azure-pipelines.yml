@@ -24,6 +24,14 @@ steps:
 #     # Your build command here, for example:
 #     python setup.py build
 #   displayName: 'Build Project'
+# - task: CopyFiles@2
+#   inputs:
+#     contents: library-basic/dist/**
+#     targetFolder: $(Build.ArtifactStagingDirectory)
+- task: CopyFiles@2
+  displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
+  inputs:
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
 # Publish the artifact
 - task: PublishBuildArtifacts@1
