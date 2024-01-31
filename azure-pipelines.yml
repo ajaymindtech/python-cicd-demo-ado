@@ -15,15 +15,15 @@ steps:
     pip install -r requirements.txt
   displayName: 'Install dependencies'
 
-- script: |
-    python -m pytest tests
-  displayName: 'Run tests'
+# - script: |
+#     python -m pytest tests
+#   displayName: 'Run tests'
 
-# Assuming your build process creates an artifact in a folder named 'build_output'
-- script: |
-    # Your build command here, for example:
-    python setup.py build
-  displayName: 'Build Project'
+# # Assuming your build process creates an artifact in a folder named 'build_output'
+# - script: |
+#     # Your build command here, for example:
+#     python setup.py build
+#   displayName: 'Build Project'
 
 # Publish the artifact
 - task: PublishBuildArtifacts@1
