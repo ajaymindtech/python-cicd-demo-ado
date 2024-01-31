@@ -28,6 +28,6 @@ steps:
 # Publish the artifact
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: 'build_output'  # The folder path of the artifact to publish
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'  # The folder path of the artifact to publish
     ArtifactName: 'myArtifact'  # Name of the artifact
     publishLocation: 'Container'
