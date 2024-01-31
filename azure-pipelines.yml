@@ -1,5 +1,5 @@
 trigger:
-  - main
+  - master
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -30,4 +30,4 @@ steps:
   inputs:
     PathtoPublish: 'build_output'  # The folder path of the artifact to publish
     ArtifactName: 'myArtifact'  # Name of the artifact
-    publishLocation: 'Container
+    publishLocation: 'Container'
