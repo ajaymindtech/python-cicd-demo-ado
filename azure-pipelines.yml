@@ -1,42 +1,82 @@
+# trigger:
+# - master
+
+# pool:
+#   vmImage: 'ubuntu-latest'
+
+# steps:
+# - task: UsePythonVersion@0
+#   inputs:
+#     versionSpec: '3.x'
+#     addToPath: true
+
+# - script: |
+#     python -m pip install --upgrade pip
+#     pip install -r requirements.txt
+#   displayName: 'Install dependencies'
+
+# # - script: |
+# #     python -m pytest tests
+# #   displayName: 'Run tests'
+
+# # # Assuming your build process creates an artifact in a folder named 'build_output'
+# # - script: |
+# #     # Your build command here, for example:
+# #     python setup.py build
+# #   displayName: 'Build Project'
+# # - task: CopyFiles@2
+# #   inputs:
+# #     contents: library-basic/dist/**
+# #     targetFolder: $(Build.ArtifactStagingDirectory)
+# - task: CopyFiles@2
+#   displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
+#   inputs:
+#     Contents: test-data/**
+#     TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+# # Publish the artifact
+# - task: PublishBuildArtifacts@1
+#   inputs:
+#     PathtoPublish: '$(Build.ArtifactStagingDirectory)' # The folder path of the artifact to publish
+#     ArtifactName: 'myArtifact-2' # Name of the artifact
+#     publishLocation: 'Container'
 trigger:
-- master
+  branches:
+    include:
+    - main
+
+parameters:
+- name: application
+  displayName: 'Select Application to Build'
+  type: string
+  default: 'app1'
+  values:
+  - app1
+  - app2
+  # Extend this list with more applications as needed
 
 pool:
   vmImage: 'ubuntu-latest'
 
-steps:
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '3.x'
-    addToPath: true
+stages:
+- stage: Build
+  displayName: 'Build Stage'
+  jobs:
+  - job: BuildSelectedApplication
+    displayName: 'Build Selected Application'
+    steps:
+    - ${{ if eq(parameters.application, 'app1') }}:
+      - script: |
+          echo "Building App1..."
+          # Insert the build commands for App1 here
+        displayName: 'Build App1'
+        workingDirectory: app1
 
-- script: |
-    python -m pip install --upgrade pip
-    pip install -r requirements.txt
-  displayName: 'Install dependencies'
+    - ${{ if eq(parameters.application, 'app2') }}:
+      - script: |
+          echo "Building App2..."
+          # Insert the build commands for App2 here
+        displayName: 'Build App2'
+        workingDirectory: app2
 
-# - script: |
-#     python -m pytest tests
-#   displayName: 'Run tests'
-
-# # Assuming your build process creates an artifact in a folder named 'build_output'
-# - script: |
-#     # Your build command here, for example:
-#     python setup.py build
-#   displayName: 'Build Project'
-# - task: CopyFiles@2
-#   inputs:
-#     contents: library-basic/dist/**
-#     targetFolder: $(Build.ArtifactStagingDirectory)
-- task: CopyFiles@2
-  displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
-  inputs:
-    Contents: test-data/**
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
-
-# Publish the artifact
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)' # The folder path of the artifact to publish
-    ArtifactName: 'myArtifact-2' # Name of the artifact
-    publishLocation: 'Container'
+    # Extend this section with additional applications as needed
